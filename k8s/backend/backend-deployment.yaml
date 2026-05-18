@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: green
+  labels:
+    app: oracle-smart-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: oracle-smart-backend
+  template:
+    metadata:
+      labels:
+        app: oracle-smart-backend
+    spec:
+      imagePullSecrets:
+        - name: ocir-secret
+      containers:
+        - name: backend
+          image: qro.ocir.io/axozuy0c3gbd/oracle-smart-backend:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: TNS_ADMIN
+              value: /app/wallet
+            - name: ADB_TNS_ALIAS
+              valueFrom:
+                secretKeyRef:
+                  name: adb-credentials
+                  key: ADB_TNS_ALIAS
+            - name: ADB_APP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: adb-credentials
+                  key: ADB_APP_USER
+            - name: ADB_APP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: adb-credentials
+                  key: ADB_APP_PASSWORD
+            - name: FRONTEND_ORIGIN
+              valueFrom:
+                secretKeyRef:
+                  name: adb-credentials
+                  key: FRONTEND_ORIGIN
+          volumeMounts:
+            - name: oracle-wallet
+              mountPath: /app/wallet
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+      volumes:
+        - name: oracle-wallet
+          secret:
+            secretName: adb-wallet

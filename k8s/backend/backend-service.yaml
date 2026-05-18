@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: green
+  labels:
+    app: oracle-smart-backend
+spec:
+  type: ClusterIP
+  selector:
+    app: oracle-smart-backend
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP

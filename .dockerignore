@@ -1,0 +1,48 @@
+# Build output
+target/
+build/
+
+# Version control
+.git/
+.gitignore
+
+# Environment and secrets
+.env
+.env.*
+*.env
+config/
+wallet/
+wallet.zip
+*.zip
+
+# Logs
+*.log
+logs/
+
+# IDE and editor
+.idea/
+.vscode/
+*.iml
+.settings/
+.classpath
+.project
+.factorypath
+.springBeans
+
+# Local scripts (not needed in image)
+deploy.sh
+docker-compose.yml
+test.sh
+stop.sh
+
+# Kubernetes manifests (not part of app image)
+k8s/
+
+# Documentation
+README.md
+DEPLOYMENT.md
+*.md
+
+# OS
+.DS_Store
+Thumbs.db
