@@ -173,12 +173,29 @@ CREATE TABLE issue_log (
 
 CREATE TABLE overdue_report (
     id NUMBER PRIMARY KEY,
-    issue_id NUMBER,
-    generated_at TIMESTAMP DEFAULT SYSTIMESTAMP,
-    title VARCHAR2(200),
-    notes VARCHAR2(500),
+    issue_id NUMBER NOT NULL,
 
-    CONSTRAINT fk_overdue_issue FOREIGN KEY (issue_id) REFERENCES issues(id)
+    task_title VARCHAR2(200),
+    developer_name VARCHAR2(120),
+
+    due_date TIMESTAMP,
+    submitted_at TIMESTAMP DEFAULT SYSTIMESTAMP,
+
+    reason VARCHAR2(500),
+
+    ai_summary VARCHAR2(1000),
+    ai_category VARCHAR2(30),
+    severity VARCHAR2(10),
+
+    delay_days NUMBER,
+    impact_level VARCHAR2(10),
+    description VARCHAR2(1000),
+
+    recommendation VARCHAR2(1000),
+
+    CONSTRAINT fk_overdue_issue
+        FOREIGN KEY (issue_id)
+        REFERENCES issues(id)
 );
 
 -- =====================================
