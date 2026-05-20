@@ -9,6 +9,10 @@ env:
     IMAGE_TAG: v1
     OCIR_REGION: qro.ocir.io
     OCIR_NAMESPACE: axozuy0c3gbd
+    OCIR_USERNAME: axozuy0c3gbd/a01645849@tec.mx
+
+  vaultVariables:
+    OCIR_AUTH_TOKEN: ocid1.vaultsecret.oc1.mx-queretaro-1.amaaaaaa7v5mmhaaf7q2urefhhriu4aezmyxyk4hm3peqlvlpnph6fwa4afa
 
 steps:
   - type: Command
@@ -25,6 +29,11 @@ steps:
     name: Tag Docker image
     command: |
       docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${OCIR_REGION}/${OCIR_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}
+
+  - type: Command
+    name: Login to OCIR
+    command: |
+      echo "${OCIR_AUTH_TOKEN}" | docker login ${OCIR_REGION} -u "${OCIR_USERNAME}" --password-stdin
 
   - type: Command
     name: Push Docker image
