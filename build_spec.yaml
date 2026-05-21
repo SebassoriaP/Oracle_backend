@@ -6,7 +6,6 @@ shell: bash
 env:
   variables:
     IMAGE_NAME: oracle-smart-backend
-    IMAGE_TAG: v1
     OCIR_REGION: qro.ocir.io
     OCIR_NAMESPACE: axozuy0c3gbd
     OCIR_USERNAME: axozuy0c3gbd/a01645849@tec.mx
@@ -21,21 +20,29 @@ steps:
       mvn clean package -DskipTests
 
   - type: Command
-    name: Build Docker image
-    command: |
-      docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
-
-  - type: Command
-    name: Tag Docker image
-    command: |
-      docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${OCIR_REGION}/${OCIR_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}
-
-  - type: Command
     name: Login to OCIR
     command: |
       echo "${OCIR_AUTH_TOKEN}" | docker login ${OCIR_REGION} -u "${OCIR_USERNAME}" --password-stdin
 
   - type: Command
+    name: Build Docker image
+    command: |
+      IMAGE_TAG=$(git rev-parse --short HEAD)
+      docker build -t ${OCIR_REGION}/${OCIR_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG} .
+
+  - type: Command
     name: Push Docker image
     command: |
+      IMAGE_TAG=$(git rev-parse --short HEAD)
       docker push ${OCIR_REGION}/${OCIR_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}
+
+  - type: Command
+    name: Prepare backend Kubernetes manifest
+    command: |
+      IMAGE_TAG=$(git rev-parse --short HEAD)
+      sed "s|qro.ocir.io/axozuy0c3gbd/oracle-smart-backend:v1|${OCIR_REGION}/${OCIR_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}|g" k8s/backend/backend-full.yaml > backend-full.generated.yaml
+
+outputArtifacts:
+  - name: backend_full_manifest
+    type: BINARY
+    location: backend-full.generated.yaml

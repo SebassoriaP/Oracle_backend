@@ -121,6 +121,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: frontend-green-service
+                name: frontend-service
                 port:
                   number: 80
