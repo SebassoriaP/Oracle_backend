@@ -1,13 +1,10 @@
 server:
   port: 8080
+  forward-headers-strategy: framework
 
 spring:
   mvc:
     throw-exception-if-no-handler-found: true
-
-  web:
-    resources:
-      add-mappings: false
 
   application:
     name: omi-backend
@@ -24,3 +21,10 @@ spring:
 app:
   cors:
     allowed-origin: ${FRONTEND_ORIGIN}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+
+  swagger-ui:
+    path: /swagger-ui.html
