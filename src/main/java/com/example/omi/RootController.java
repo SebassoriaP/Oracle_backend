@@ -11,6 +11,6 @@ public class RootController {
   public Map<String, String> root() {
     return Map.of(
         "status", "ok",
-        "message", "OMI backend is running - test");
+        "message", "OMI backend is running");
   }
 }

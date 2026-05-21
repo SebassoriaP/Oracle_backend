@@ -17,6 +17,6 @@ public class HealthController {
   @GetMapping("/health")
   public Map<String, Object> health() {
     Integer result = jdbcTemplate.queryForObject("SELECT 1 FROM DUAL", Integer.class);
-    return Map.of("status", "ok", "db", result);
+    return Map.of("status", "ok - this is a test", "db", result);
   }
 }
