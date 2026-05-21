@@ -20,6 +20,11 @@ public class ProjectController {
     return repo.findAll();
   }
 
+  @PostMapping
+  public void create(@Valid @RequestBody CreateProjectRequest req) {
+    repo.createProject(req);
+  }
+
   @GetMapping("/{projectId}/members")
   public List<ProjectMemberDto> getMembers(@PathVariable Long projectId) {
     return repo.findMembers(projectId);

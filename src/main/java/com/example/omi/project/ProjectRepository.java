@@ -90,4 +90,27 @@ public class ProjectRepository {
       throw new org.springframework.dao.EmptyResultDataAccessException(1);
     }
   }
+
+  public void createProject(CreateProjectRequest req) {
+    String sql =
+        """
+        INSERT INTO project (
+            id,
+            name,
+            description,
+            status,
+            created_at
+        ) VALUES (
+            (SELECT COALESCE(MAX(id), 0) + 1 FROM project),
+            ?, ?, ?, SYSTIMESTAMP
+        )
+        """;
+
+    jdbcTemplate.update(
+        sql,
+        req.getName(),
+        req.getDescription(),
+        req.getStatus()
+    );
+  }
 }

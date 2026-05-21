@@ -86,25 +86,55 @@ public class IssueRepository {
     return jdbc.query(sql.toString(), this::mapIssueDto, args.toArray());
   }
 
+  public IssueDto findById(Long issueId) {
+    String sql =
+        """
+        SELECT
+            i.id,
+            s.project_id,
+            f.sprint_id,
+            i.feature_id,
+            i.title,
+            i.description,
+            i.status,
+            i.type,
+            i.assigned_to,
+            i.created_at,
+            i.updated_at,
+            i.estimated_hours,
+            i.actual_hours,
+            i.is_visible,
+            i.due_date
+        FROM issues i
+        JOIN feature f ON f.id = i.feature_id
+        JOIN sprint s ON s.id = f.sprint_id
+        WHERE i.id = ?
+        """;
+    List<IssueDto> results = jdbc.query(sql, this::mapIssueDto, issueId);
+    return results.isEmpty() ? null : results.get(0);
+  }
+
   public void create(CreateIssueRequest r) {
     String sql =
         """
         INSERT INTO issues (
-            id,
-            title,
-            description,
-            type,
-            status,
-            estimated_hours,
-            actual_hours,
-            feature_id,
-            assigned_to,
-            is_visible,
-            created_at,
-            updated_at
-        ) VALUES (
+          id,
+          title,
+          description,
+          type,
+          status,
+          estimated_hours,
+          actual_hours,
+          feature_id,
+          assigned_to,
+          is_visible,
+          created_at,
+          updated_at,
+          due_date
+        )
+        VALUES (
             (SELECT COALESCE(MAX(id), 0) + 1 FROM issues),
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, SYSTIMESTAMP, NULL
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, SYSTIMESTAMP, NULL, ?
         )
         """;
 
@@ -118,7 +148,9 @@ public class IssueRepository {
         r.getActualHours(),
         r.getFeatureId(),
         r.getAssigneeId(),
-        Boolean.TRUE.equals(r.getIsVisible()) ? 1 : 0);
+        Boolean.TRUE.equals(r.getIsVisible()) ? 1 : 0,
+        r.getDueDate() != null ? java.sql.Timestamp.from(r.getDueDate().toInstant()) : null
+    );
   }
 
   public void patch(Long issueId, PatchIssueRequest r) {

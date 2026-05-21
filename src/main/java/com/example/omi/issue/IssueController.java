@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api")
@@ -37,6 +39,18 @@ public class IssueController {
     }
 
     return repo.findByProject(projectId, sprintId, status, assignedTo, startDate, endDate);
+  }
+
+  @GetMapping("/issues/{issueId}")
+  public IssueDto getById(@PathVariable Long issueId) {
+      IssueDto issue = repo.findById(issueId);
+      if (issue == null) {
+          throw new ResponseStatusException(
+              HttpStatus.NOT_FOUND,
+              "Issue not found"
+          );
+      }
+      return issue;
   }
 
   @PostMapping("/projects/{projectId}/issues")

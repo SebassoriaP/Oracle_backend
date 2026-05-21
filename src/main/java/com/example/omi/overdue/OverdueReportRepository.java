@@ -2,7 +2,7 @@ package com.example.omi.overdue;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -22,9 +22,18 @@ public class OverdueReportRepository {
         SELECT
             id,
             issue_id,
-            generated_at,
-            title,
-            notes
+            task_title,
+            developer_name,
+            due_date,
+            submitted_at,
+            reason,
+            ai_summary,
+            ai_category,
+            severity,
+            delay_days,
+            impact_level,
+            description,
+            recommendation
         FROM overdue_report
         ORDER BY id
         """;
@@ -38,9 +47,18 @@ public class OverdueReportRepository {
         SELECT
             id,
             issue_id,
-            generated_at,
-            title,
-            notes
+            task_title,
+            developer_name,
+            due_date,
+            submitted_at,
+            reason,
+            ai_summary,
+            ai_category,
+            severity,
+            delay_days,
+            impact_level,
+            description,
+            recommendation
         FROM overdue_report
         WHERE id = ?
         """;
@@ -54,19 +72,50 @@ public class OverdueReportRepository {
         INSERT INTO overdue_report (
             id,
             issue_id,
-            generated_at,
-            title,
-            notes
+            task_title,
+            developer_name,
+            due_date,
+            submitted_at,
+            reason,
+            ai_summary,
+            ai_category,
+            severity,
+            delay_days,
+            impact_level,
+            description,
+            recommendation
         ) VALUES (
-            (SELECT COALESCE(MAX(id), 0) + 1 FROM overdue_report),
+            (SELECT NVL(MAX(id), 0) + 1 FROM overdue_report),
+            ?,
+            ?,
+            ?,
             ?,
             SYSTIMESTAMP,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
             ?,
             ?
         )
         """;
 
-    jdbc.update(sql, req.getIssueId(), req.getTitle(), req.getNotes());
+    jdbc.update(sql,
+        req.getIssueId(),
+        req.getTaskTitle(),
+        req.getDeveloperName(),
+        req.getDueDate(),
+        req.getReason(),
+        req.getAiSummary(),
+        req.getAiCategory(),
+        req.getSeverity(),
+        req.getDelayDays(),
+        req.getImpactLevel(),
+        req.getDescription(),
+        req.getRecommendation()
+    );
   }
 
   public void update(Long reportId, UpdateOverdueReportRequest req) {
@@ -75,12 +124,35 @@ public class OverdueReportRepository {
         UPDATE overdue_report
         SET
             issue_id = ?,
-            title = ?,
-            notes = ?
+            task_title = ?,
+            developer_name = ?,
+            due_date = ?,
+            reason = ?,
+            ai_summary = ?,
+            ai_category = ?,
+            severity = ?,
+            delay_days = ?,
+            impact_level = ?,
+            description = ?,
+            recommendation = ?
         WHERE id = ?
         """;
 
-    int rows = jdbc.update(sql, req.getIssueId(), req.getTitle(), req.getNotes(), reportId);
+    int rows = jdbc.update(sql,
+        req.getIssueId(),
+        req.getTaskTitle(),
+        req.getDeveloperName(),
+        req.getDueDate(),
+        req.getReason(),
+        req.getAiSummary(),
+        req.getAiCategory(),
+        req.getSeverity(),
+        req.getDelayDays(),
+        req.getImpactLevel(),
+        req.getDescription(),
+        req.getRecommendation(),
+        reportId
+    );
 
     if (rows == 0) {
       throw new org.springframework.dao.EmptyResultDataAccessException(1);
@@ -88,7 +160,10 @@ public class OverdueReportRepository {
   }
 
   public void delete(Long reportId) {
-    int rows = jdbc.update("DELETE FROM overdue_report WHERE id = ?", reportId);
+    int rows = jdbc.update(
+        "DELETE FROM overdue_report WHERE id = ?",
+        reportId
+    );
 
     if (rows == 0) {
       throw new org.springframework.dao.EmptyResultDataAccessException(1);
@@ -97,7 +172,11 @@ public class OverdueReportRepository {
 
   public boolean issueExists(Long issueId) {
     Integer count =
-        jdbc.queryForObject("SELECT COUNT(*) FROM issues WHERE id = ?", Integer.class, issueId);
+        jdbc.queryForObject(
+            "SELECT COUNT(*) FROM issues WHERE id = ?",
+            Integer.class,
+            issueId
+        );
 
     return count != null && count > 0;
   }
@@ -106,8 +185,23 @@ public class OverdueReportRepository {
     return new OverdueReportDto(
         rs.getLong("id"),
         rs.getLong("issue_id"),
-        rs.getObject("generated_at", OffsetDateTime.class),
-        rs.getString("title"),
-        rs.getString("notes"));
+        rs.getString("task_title"),
+        rs.getString("developer_name"),
+        safeToLocalDateTime(rs, "due_date"),
+        safeToLocalDateTime(rs, "submitted_at"),
+        rs.getString("reason"),
+        rs.getString("ai_summary"),
+        rs.getString("ai_category"),
+        rs.getString("severity"),
+        rs.getObject("delay_days", Integer.class),
+        rs.getString("impact_level"),
+        rs.getString("description"),
+        rs.getString("recommendation")
+    );
+  }
+
+  private LocalDateTime safeToLocalDateTime(ResultSet rs, String column) throws SQLException {
+    var ts = rs.getTimestamp(column);
+    return ts != null ? ts.toLocalDateTime() : null;
   }
 }
