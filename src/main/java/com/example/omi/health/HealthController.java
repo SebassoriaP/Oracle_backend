@@ -1,8 +1,11 @@
 package com.example.omi.health;
 
 import java.util.Map;
+
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
@@ -17,6 +20,6 @@ public class HealthController {
   @GetMapping("/health")
   public Map<String, Object> health() {
     Integer result = jdbcTemplate.queryForObject("SELECT 1 FROM DUAL", Integer.class);
-    return Map.of("status", "ok", "db", result);
+    return Map.of("status", "ok_6", "db", result);
   }
 }
