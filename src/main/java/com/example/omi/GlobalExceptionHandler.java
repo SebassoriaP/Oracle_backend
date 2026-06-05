@@ -3,11 +3,14 @@ package com.example.omi;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 @RestControllerAdvice
@@ -33,8 +36,9 @@ public class GlobalExceptionHandler {
         .body(Map.of("error", "Invalid Argument", "message", e.getMessage()));
   }
 
-  @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
-  public ResponseEntity<Map<String, String>> handleDataIntegrity(Exception e) {
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<Map<String, String>> handleDataIntegrity(
+      DataIntegrityViolationException e) {
     return ResponseEntity.status(HttpStatus.CONFLICT)
         .body(
             Map.of(
@@ -44,14 +48,26 @@ public class GlobalExceptionHandler {
                 "The operation could not be completed due to data constraints."));
   }
 
-  @ExceptionHandler(org.springframework.dao.EmptyResultDataAccessException.class)
-  public ResponseEntity<Map<String, String>> handleNotFoundData(
-      org.springframework.dao.EmptyResultDataAccessException e) {
+  @ExceptionHandler(EmptyResultDataAccessException.class)
+  public ResponseEntity<Map<String, String>> handleNotFoundData(EmptyResultDataAccessException e) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(
             Map.of(
                 "error", "Not Found",
                 "message", "The requested resource does not exist"));
+  }
+
+  @ExceptionHandler(ResponseStatusException.class)
+  public ResponseEntity<Map<String, String>> handleResponseStatus(ResponseStatusException e) {
+    HttpStatus status = HttpStatus.valueOf(e.getStatusCode().value());
+
+    return ResponseEntity.status(status)
+        .body(
+            Map.of(
+                "error",
+                status == HttpStatus.NOT_FOUND ? "Not Found" : "Request Failed",
+                "message",
+                e.getReason() != null ? e.getReason() : "Request failed"));
   }
 
   @ExceptionHandler(NoHandlerFoundException.class)
