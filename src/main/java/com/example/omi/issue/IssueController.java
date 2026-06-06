@@ -1,10 +1,12 @@
 package com.example.omi.issue;
 
+import com.example.omi.EmbeddingService;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -12,9 +14,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class IssueController {
 
   private final IssueRepository repo;
+  private final EmbeddingService embeddingService;
 
-  public IssueController(IssueRepository repo) {
+  public IssueController(IssueRepository repo, EmbeddingService embeddingService) {
     this.repo = repo;
+    this.embeddingService = embeddingService;
   }
 
   @GetMapping("/projects/{projectId}/issues")
@@ -41,16 +45,32 @@ public class IssueController {
     return repo.findByProject(projectId, sprintId, status, assignedTo, startDate, endDate);
   }
 
+  @GetMapping("/projects/{projectId}/issues/semantic-search")
+  public List<IssueDto> searchByTitle(@PathVariable Long projectId, @RequestParam String search) {
+    if (search == null || search.isBlank()) {
+      throw new IllegalArgumentException("search is required");
+    }
+
+    float[] queryEmbedding = embeddingService.embedTitle(search.trim());
+    return repo.searchByTitleSemantic(projectId, queryEmbedding);
+  }
+
+  @PostMapping("/projects/{projectId}/issues/reindex-embeddings")
+  public Map<String, Object> reindexIssueEmbeddings(@PathVariable Long projectId) {
+    int updated = repo.reindexTitleEmbeddingsByProject(projectId, embeddingService);
+    return Map.of(
+        "projectId", projectId,
+        "updated", updated);
+  }
+
   @GetMapping("/issues/{issueId}")
   public IssueDto getById(@PathVariable Long issueId) {
-      IssueDto issue = repo.findById(issueId);
-      if (issue == null) {
-          throw new ResponseStatusException(
-              HttpStatus.NOT_FOUND,
-              "Issue not found"
-          );
-      }
-      return issue;
+    IssueDto issue = repo.findById(issueId);
+    if (issue == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Issue not found");
+    }
+
+    return issue;
   }
 
   @PostMapping("/projects/{projectId}/issues")
@@ -60,12 +80,15 @@ public class IssueController {
       throw new IllegalArgumentException("Feature does not belong to the given project");
     }
 
-    repo.create(req);
+    float[] titleEmbedding = embeddingService.embedTitle(req.getTitle());
+    repo.create(req, titleEmbedding);
   }
 
   @PatchMapping("/issues/{issueId}")
   public void patch(@PathVariable Long issueId, @Valid @RequestBody PatchIssueRequest req) {
-    repo.patch(issueId, req);
+    float[] titleEmbedding =
+        req.getTitle() != null ? embeddingService.embedTitle(req.getTitle()) : null;
+    repo.patch(issueId, req, titleEmbedding);
   }
 
   @GetMapping("/issues/{issueId}/timelogs")

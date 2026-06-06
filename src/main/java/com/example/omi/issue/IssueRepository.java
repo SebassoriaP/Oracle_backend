@@ -1,11 +1,14 @@
 package com.example.omi.issue;
 
+import com.example.omi.EmbeddingService;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import oracle.jdbc.OracleType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -86,6 +89,80 @@ public class IssueRepository {
     return jdbc.query(sql.toString(), this::mapIssueDto, args.toArray());
   }
 
+  public List<IssueDto> searchByTitleSemantic(Long projectId, float[] queryEmbedding) {
+    String sql =
+        """
+        SELECT
+            i.id,
+            s.project_id,
+            f.sprint_id,
+            i.feature_id,
+            i.title,
+            i.description,
+            i.status,
+            i.type,
+            i.assigned_to,
+            i.created_at,
+            i.updated_at,
+            i.estimated_hours,
+            i.actual_hours,
+            i.is_visible,
+            i.due_date
+        FROM issues i
+        JOIN feature f ON f.id = i.feature_id
+        JOIN sprint s ON s.id = f.sprint_id
+        WHERE s.project_id = ?
+          AND i.title_embedding IS NOT NULL
+        ORDER BY COSINE_DISTANCE(i.title_embedding, ?), i.id
+        FETCH FIRST 20 ROWS ONLY
+        """;
+
+    return jdbc.query(
+        con -> {
+          PreparedStatement ps = con.prepareStatement(sql);
+          ps.setObject(1, projectId);
+          ps.setObject(2, queryEmbedding, OracleType.VECTOR_FLOAT32);
+          return ps;
+        },
+        this::mapIssueDto);
+  }
+
+  public int reindexTitleEmbeddingsByProject(Long projectId, EmbeddingService embeddingService) {
+
+    List<IssueDto> issues = findByProject(projectId, null, null, null, null, null);
+
+    int updated = 0;
+
+    for (IssueDto issue : issues) {
+      if (issue.title() == null || issue.title().isBlank()) {
+        continue;
+      }
+
+      float[] embedding = embeddingService.embedTitle(issue.title());
+      updated += updateTitleEmbedding(issue.id(), embedding);
+    }
+
+    return updated;
+  }
+
+  private int updateTitleEmbedding(Long issueId, float[] embedding) {
+    String sql =
+        """
+        UPDATE issues
+        SET title_embedding = ?,
+            updated_at = SYSTIMESTAMP
+        WHERE id = ?
+        """;
+
+    return jdbc.update(
+        con -> {
+          PreparedStatement ps = con.prepareStatement(sql);
+          ps.setObject(1, embedding, OracleType.VECTOR_FLOAT32);
+          ps.setLong(2, issueId);
+          return ps;
+        });
+  }
+
   public IssueDto findById(Long issueId) {
     String sql =
         """
@@ -114,7 +191,7 @@ public class IssueRepository {
     return results.isEmpty() ? null : results.get(0);
   }
 
-  public void create(CreateIssueRequest r) {
+  public void create(CreateIssueRequest r, float[] titleEmbedding) {
     String sql =
         """
         INSERT INTO issues (
@@ -130,30 +207,39 @@ public class IssueRepository {
           is_visible,
           created_at,
           updated_at,
-          due_date
+          due_date,
+          title_embedding
         )
         VALUES (
             (SELECT COALESCE(MAX(id), 0) + 1 FROM issues),
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, SYSTIMESTAMP, NULL, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, SYSTIMESTAMP, NULL, ?, ?
         )
         """;
 
     jdbc.update(
-        sql,
-        r.getTitle(),
-        r.getDescription(),
-        normalizeIssueType(r.getType()),
-        normalizeIssueStatus(r.getStatus()),
-        r.getEstimatedHours(),
-        r.getActualHours(),
-        r.getFeatureId(),
-        r.getAssigneeId(),
-        Boolean.TRUE.equals(r.getIsVisible()) ? 1 : 0,
-        r.getDueDate() != null ? java.sql.Timestamp.from(r.getDueDate().toInstant()) : null
-    );
+        con -> {
+          PreparedStatement ps = con.prepareStatement(sql);
+          int i = 1;
+
+          ps.setString(i++, r.getTitle());
+          ps.setString(i++, r.getDescription());
+          ps.setString(i++, normalizeIssueType(r.getType()));
+          ps.setString(i++, normalizeIssueStatus(r.getStatus()));
+          ps.setObject(i++, r.getEstimatedHours());
+          ps.setObject(i++, r.getActualHours());
+          ps.setObject(i++, r.getFeatureId());
+          ps.setObject(i++, r.getAssigneeId());
+          ps.setObject(i++, Boolean.TRUE.equals(r.getIsVisible()) ? 1 : 0);
+          ps.setObject(
+              i++,
+              r.getDueDate() != null ? java.sql.Timestamp.from(r.getDueDate().toInstant()) : null);
+          ps.setObject(i++, titleEmbedding, OracleType.VECTOR_FLOAT32);
+
+          return ps;
+        });
   }
 
-  public void patch(Long issueId, PatchIssueRequest r) {
+  public void patch(Long issueId, PatchIssueRequest r, float[] titleEmbedding) {
     StringBuilder sql = new StringBuilder("UPDATE issues SET ");
     List<Object> args = new ArrayList<>();
     boolean first = true;
@@ -162,6 +248,9 @@ public class IssueRepository {
       sql.append(first ? "" : ", ").append("title = ?");
       args.add(r.getTitle());
       first = false;
+
+      sql.append(", title_embedding = ?");
+      args.add(titleEmbedding);
     }
 
     if (r.getDescription() != null) {
@@ -219,7 +308,11 @@ public class IssueRepository {
     sql.append(", updated_at = SYSTIMESTAMP WHERE id = ?");
     args.add(issueId);
 
-    jdbc.update(sql.toString(), args.toArray());
+    int rows = jdbc.update(sql.toString(), args.toArray());
+
+    if (rows == 0) {
+      throw new org.springframework.dao.EmptyResultDataAccessException(1);
+    }
   }
 
   public List<TimeLogDto> findTimeLogsByIssue(Long issueId) {
