@@ -1,6 +1,6 @@
 package com.example.omi.user;
 
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
 
 public record UserDto(
     Long id,
@@ -9,6 +9,6 @@ public record UserDto(
     String workMode,
     Long roleId,
     Long managerId,
-    OffsetDateTime createdAt,
+    Timestamp createdAt,
     String status,
     String chatId) {}

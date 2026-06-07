@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 
 public class CreateIssueRequest {
 
@@ -40,7 +40,7 @@ public class CreateIssueRequest {
   @NotNull(message = "isVisible is required")
   private Boolean isVisible;
 
-  private OffsetDateTime dueDate;
+  private LocalDate dueDate;
 
   public String getTitle() {
     return title;
@@ -114,11 +114,11 @@ public class CreateIssueRequest {
     this.isVisible = isVisible;
   }
 
-  public OffsetDateTime getDueDate() {
+  public LocalDate getDueDate() {
     return dueDate;
   }
 
-  public void setDueDate(OffsetDateTime dueDate) {
+  public void setDueDate(LocalDate dueDate) {
     this.dueDate = dueDate;
   }
 }

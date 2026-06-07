@@ -2,7 +2,7 @@ package com.example.omi.user;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -93,6 +93,8 @@ public class UserRepository {
   }
 
   private UserDto mapUserDto(ResultSet rs, int rowNum) throws SQLException {
+    Timestamp createdAt = rs.getTimestamp("created_at");
+
     return new UserDto(
         rs.getLong("id"),
         rs.getString("name"),
@@ -100,7 +102,7 @@ public class UserRepository {
         rs.getString("work_mode"),
         rs.getObject("role_id", Long.class),
         rs.getObject("manager_id", Long.class),
-        rs.getObject("created_at", OffsetDateTime.class),
+        createdAt,
         rs.getString("status"),
         rs.getString("chat_id"));
   }

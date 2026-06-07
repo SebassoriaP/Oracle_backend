@@ -1,7 +1,7 @@
 package com.example.omi.issue;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 
 public record IssueDto(
     Long id,
@@ -13,8 +13,8 @@ public record IssueDto(
     String status,
     String type,
     Long assigneeId,
-    OffsetDateTime createdAt,
-    OffsetDateTime updatedAt,
+    Timestamp createdAt,
+    Timestamp updatedAt,
     Integer estimatedHours,
     Integer actualHours,
     Boolean isVisible,

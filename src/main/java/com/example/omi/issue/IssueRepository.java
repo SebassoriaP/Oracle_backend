@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import oracle.jdbc.OracleType;
@@ -128,7 +127,6 @@ public class IssueRepository {
   }
 
   public int reindexTitleEmbeddingsByProject(Long projectId, EmbeddingService embeddingService) {
-
     List<IssueDto> issues = findByProject(projectId, null, null, null, null, null);
 
     int updated = 0;
@@ -187,6 +185,7 @@ public class IssueRepository {
         JOIN sprint s ON s.id = f.sprint_id
         WHERE i.id = ?
         """;
+
     List<IssueDto> results = jdbc.query(sql, this::mapIssueDto, issueId);
     return results.isEmpty() ? null : results.get(0);
   }
@@ -230,9 +229,7 @@ public class IssueRepository {
           ps.setObject(i++, r.getFeatureId());
           ps.setObject(i++, r.getAssigneeId());
           ps.setObject(i++, Boolean.TRUE.equals(r.getIsVisible()) ? 1 : 0);
-          ps.setObject(
-              i++,
-              r.getDueDate() != null ? java.sql.Timestamp.from(r.getDueDate().toInstant()) : null);
+          ps.setObject(i++, r.getDueDate() != null ? java.sql.Date.valueOf(r.getDueDate()) : null);
           ps.setObject(i++, titleEmbedding, OracleType.VECTOR_FLOAT32);
 
           return ps;
@@ -241,63 +238,63 @@ public class IssueRepository {
 
   public void patch(Long issueId, PatchIssueRequest r, float[] titleEmbedding) {
     StringBuilder sql = new StringBuilder("UPDATE issues SET ");
-    List<Object> args = new ArrayList<>();
+    List<Object> params = new ArrayList<>();
     boolean first = true;
 
     if (r.getTitle() != null) {
       sql.append(first ? "" : ", ").append("title = ?");
-      args.add(r.getTitle());
+      params.add(r.getTitle());
       first = false;
 
       sql.append(", title_embedding = ?");
-      args.add(titleEmbedding);
+      params.add(titleEmbedding);
     }
 
     if (r.getDescription() != null) {
       sql.append(first ? "" : ", ").append("description = ?");
-      args.add(r.getDescription());
+      params.add(r.getDescription());
       first = false;
     }
 
     if (r.getType() != null) {
       sql.append(first ? "" : ", ").append("type = ?");
-      args.add(normalizeIssueType(r.getType()));
+      params.add(normalizeIssueType(r.getType()));
       first = false;
     }
 
     if (r.getStatus() != null) {
       sql.append(first ? "" : ", ").append("status = ?");
-      args.add(normalizeIssueStatus(r.getStatus()));
+      params.add(normalizeIssueStatus(r.getStatus()));
       first = false;
     }
 
     if (r.getEstimatedHours() != null) {
       sql.append(first ? "" : ", ").append("estimated_hours = ?");
-      args.add(r.getEstimatedHours());
+      params.add(r.getEstimatedHours());
       first = false;
     }
 
     if (r.getActualHours() != null) {
       sql.append(first ? "" : ", ").append("actual_hours = ?");
-      args.add(r.getActualHours());
+      params.add(r.getActualHours());
       first = false;
     }
 
     if (r.getFeatureId() != null) {
       sql.append(first ? "" : ", ").append("feature_id = ?");
-      args.add(r.getFeatureId());
+      params.add(r.getFeatureId());
       first = false;
     }
 
     if (r.getAssigneeId() != null) {
       sql.append(first ? "" : ", ").append("assigned_to = ?");
-      args.add(r.getAssigneeId());
+      params.add(r.getAssigneeId());
       first = false;
     }
 
     if (r.getIsVisible() != null) {
       sql.append(first ? "" : ", ").append("is_visible = ?");
-      args.add(r.getIsVisible() ? 1 : 0);
+      params.add(r.getIsVisible() ? 1 : 0);
       first = false;
     }
 
@@ -306,9 +303,24 @@ public class IssueRepository {
     }
 
     sql.append(", updated_at = SYSTIMESTAMP WHERE id = ?");
-    args.add(issueId);
+    params.add(issueId);
 
-    int rows = jdbc.update(sql.toString(), args.toArray());
+    int rows =
+        jdbc.update(
+            con -> {
+              PreparedStatement ps = con.prepareStatement(sql.toString());
+              int i = 1;
+
+              for (Object param : params) {
+                if (param instanceof float[] vec) {
+                  ps.setObject(i++, vec, OracleType.VECTOR_FLOAT32);
+                } else {
+                  ps.setObject(i++, param);
+                }
+              }
+
+              return ps;
+            });
 
     if (rows == 0) {
       throw new org.springframework.dao.EmptyResultDataAccessException(1);
@@ -405,8 +417,8 @@ public class IssueRepository {
         rs.getString("status"),
         rs.getString("type"),
         rs.getLong("assigned_to"),
-        rs.getObject("created_at", OffsetDateTime.class),
-        rs.getObject("updated_at", OffsetDateTime.class),
+        rs.getTimestamp("created_at"),
+        rs.getTimestamp("updated_at"),
         rs.getObject("estimated_hours", Integer.class),
         rs.getObject("actual_hours", Integer.class),
         rs.getInt("is_visible") == 1,
