@@ -12,6 +12,7 @@
   </parent>
   <properties>
     <java.version>17</java.version>
+    <oracle.jdbc.version>23.26.0.0.0</oracle.jdbc.version>
   </properties>
   <dependencies>
     <!-- Spring Boot Web -->
@@ -30,10 +31,28 @@
       <artifactId>flyway-core</artifactId>
     </dependency>
     <!-- Oracle JDBC + wallet-related libraries bundle -->
+    <!-- Oracle JDBC + wallet-related libraries bundle -->
     <dependency>
       <groupId>com.oracle.database.jdbc</groupId>
-      <artifactId>ojdbc11</artifactId>
-      <version>23.7.0.25.01</version>
+      <artifactId>ojdbc17-production</artifactId>
+      <version>${oracle.jdbc.version}</version>
+      <type>pom</type>
+    </dependency>
+    <!-- Required for ADB wallet/SSL -->
+    <dependency>
+      <groupId>com.oracle.database.security</groupId>
+      <artifactId>oraclepki</artifactId>
+      <version>${oracle.jdbc.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.oracle.database.security</groupId>
+      <artifactId>osdt_core</artifactId>
+      <version>21.11.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.oracle.database.security</groupId>
+      <artifactId>osdt_cert</artifactId>
+      <version>21.11.0.0</version>
     </dependency>
     <!-- Validation -->
     <dependency>
@@ -56,7 +75,7 @@
     <dependency>
       <groupId>dev.langchain4j</groupId>
       <artifactId>langchain4j-embeddings-all-minilm-l6-v2</artifactId>
-      <version>1.14.1-beta24</version>
+      <version>1.16.1-beta26</version>
     </dependency>
   </dependencies>
   <build>
