@@ -112,8 +112,17 @@ public class UserRepository {
   public Optional<UserDto> findByEmail(String email) {
     String sql =
         """
-        SELECT id, name, email, work_mode, role_id, manager_id,
-              created_at, status, chat_id
+        SELECT
+            id,
+            name,
+            email,
+            password_hash,
+            work_mode,
+            role_id,
+            manager_id,
+            created_at,
+            status,
+            chat_id
         FROM users
         WHERE email = ?
         """;
@@ -121,5 +130,47 @@ public class UserRepository {
     return jdbc.query(sql, this::mapUserDto, email)
               .stream()
               .findFirst();
+  }
+
+  public void createFromSignup(
+          String name,
+          String email,
+          String passwordHash,
+          String workMode,
+          Long roleId,
+          Long managerId,
+          String status,
+          String chatId) {
+
+      String sql =
+          """
+          INSERT INTO users (
+              id,
+              name,
+              email,
+              password_hash,
+              work_mode,
+              role_id,
+              manager_id,
+              created_at,
+              status,
+              chat_id
+          ) VALUES (
+              (SELECT COALESCE(MAX(id),0)+1 FROM users),
+              ?, ?, ?, ?, ?, ?, SYSTIMESTAMP, ?, ?
+          )
+          """;
+
+      jdbc.update(
+          sql,
+          name,
+          email,
+          passwordHash,
+          workMode,
+          roleId,
+          managerId,
+          status,
+          chatId
+      );
   }
 }

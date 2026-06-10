@@ -2,8 +2,8 @@ package com.example.omi.role;
 
 public class RoleDto {
 
-  private Long id;
-  private String name;
+  private final Long id;
+  private final String name;
 
   public RoleDto(Long id, String name) {
     this.id = id;
