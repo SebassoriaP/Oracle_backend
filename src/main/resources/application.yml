@@ -22,6 +22,11 @@ app:
   cors:
     allowed-origin: ${FRONTEND_ORIGIN}
 
+  jwt:
+    secret: ${APP_JWT_SECRET}
+    expiration-ms: ${APP_JWT_EXPIRATION_MS:86400000}
+
+
 springdoc:
   api-docs:
     path: /api/v3/api-docs
