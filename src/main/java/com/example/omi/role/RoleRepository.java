@@ -1,6 +1,7 @@
 package com.example.omi.role;
 
 import java.util.List;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -49,5 +50,16 @@ public class RoleRepository {
     if (rows == 0) {
       throw new org.springframework.dao.EmptyResultDataAccessException(1);
     }
+  }
+
+  public boolean exists(Long roleId) {
+    Integer count =
+        jdbcTemplate.queryForObject(
+            "SELECT COUNT(*) FROM role WHERE id = ?",
+            Integer.class,
+            roleId
+        );
+
+    return count != null && count > 0;
   }
 }
