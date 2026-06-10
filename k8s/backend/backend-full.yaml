@@ -47,6 +47,14 @@ spec:
                 secretKeyRef:
                   name: adb-credentials
                   key: FRONTEND_ORIGIN
+            - name: APP_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: adb-credentials
+                  key: APP_JWT_SECRET
+            - name: APP_JWT_EXPIRATION_MS
+              value: "86400000"
+
           volumeMounts:
             - name: oracle-wallet
               mountPath: /app/wallet
