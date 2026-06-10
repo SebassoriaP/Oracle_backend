@@ -110,6 +110,8 @@ CREATE TABLE issues (
     updated_at TIMESTAMP,
     due_date DATE,
 
+    title_embedding VECTOR(384, FLOAT32),
+
     CONSTRAINT fk_issue_feature FOREIGN KEY (feature_id) REFERENCES feature(id),
     CONSTRAINT fk_issue_user FOREIGN KEY (assigned_to) REFERENCES users(id)
 );
