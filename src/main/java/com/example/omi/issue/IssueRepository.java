@@ -1,15 +1,18 @@
 package com.example.omi.issue;
 
-import com.example.omi.EmbeddingService;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import oracle.jdbc.OracleType;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.example.omi.EmbeddingService;
+
+import oracle.jdbc.OracleType;
 
 @Repository
 public class IssueRepository {
@@ -509,5 +512,17 @@ public class IssueRepository {
       """;
 
       return jdbc.query(sql, this::mapIssueDto);
+  }
+
+  public void markAsNotified(List<Long> issueIds) {
+      String sql = """
+          UPDATE issues
+          SET overdue_notified = 1
+          WHERE id = ? AND overdue_notified = 0
+      """;
+
+      jdbc.batchUpdate(sql, issueIds, 50, (ps, id) -> {
+          ps.setLong(1, id);
+      });
   }
 }

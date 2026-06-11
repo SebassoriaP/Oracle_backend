@@ -1,7 +1,8 @@
 package com.example.omi.issue;
 
-import org.springframework.stereotype.Service;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
 
 @Service
 public class IssueService {
@@ -14,5 +15,12 @@ public class IssueService {
 
     public List<IssueDto> getOverdueIssues() {
         return issueRepository.findOverdueIssues();
+    }
+
+    public void markIssueAsNotified(List<Long> issueIds) {
+        if (issueIds == null || issueIds.isEmpty()) {
+            return;
+        }
+        issueRepository.markAsNotified(issueIds);
     }
 }
