@@ -1,13 +1,24 @@
 package com.example.omi.issue;
 
-import com.example.omi.EmbeddingService;
-import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.example.omi.EmbeddingService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -15,10 +26,14 @@ public class IssueController {
 
   private final IssueRepository repo;
   private final EmbeddingService embeddingService;
+  private final IssueService issueService;
 
-  public IssueController(IssueRepository repo, EmbeddingService embeddingService) {
-    this.repo = repo;
-    this.embeddingService = embeddingService;
+  public IssueController(IssueRepository repo,
+                        EmbeddingService embeddingService,
+                        IssueService issueService) {
+      this.repo = repo;
+      this.embeddingService = embeddingService;
+      this.issueService = issueService;
   }
 
   @GetMapping("/projects/{projectId}/issues")
@@ -111,5 +126,15 @@ public class IssueController {
   @DeleteMapping("/issues/{issueId}")
   public void delete(@PathVariable Long issueId) {
     repo.delete(issueId);
+  }
+
+  @GetMapping("/issues/overdue")
+  public List<IssueDto> getOverdueIssues() {
+      return issueService.getOverdueIssues();
+  }
+
+  @PatchMapping("/issues/marknotified")
+  public void markAsNotified(@RequestBody List<Long> issueIds) {
+      issueService.markIssueAsNotified(issueIds);
   }
 }

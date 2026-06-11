@@ -1,15 +1,18 @@
 package com.example.omi.issue;
 
-import com.example.omi.EmbeddingService;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import oracle.jdbc.OracleType;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.example.omi.EmbeddingService;
+
+import oracle.jdbc.OracleType;
 
 @Repository
 public class IssueRepository {
@@ -472,13 +475,54 @@ public class IssueRepository {
   }
 
   public void delete(Long issueId) {
-    jdbc.update("DELETE FROM timelog WHERE issue_id = ?", issueId);
-    jdbc.update("DELETE FROM issue_log WHERE issue_id = ?", issueId);
+      jdbc.update("DELETE FROM timelog WHERE issue_id = ?", issueId);
+      jdbc.update("DELETE FROM issue_log WHERE issue_id = ?", issueId);
 
-    int rows = jdbc.update("DELETE FROM issues WHERE id = ?", issueId);
+      int rows = jdbc.update("DELETE FROM issues WHERE id = ?", issueId);
 
-    if (rows == 0) {
-      throw new org.springframework.dao.EmptyResultDataAccessException(1);
+      if (rows == 0) {
+        throw new org.springframework.dao.EmptyResultDataAccessException(1);
+      }
     }
+
+    public List<IssueDto> findOverdueIssues() {
+      String sql = """
+          SELECT
+              i.id,
+              s.project_id,
+              f.sprint_id,
+              i.feature_id,
+              i.title,
+              i.description,
+              i.status,
+              i.type,
+              i.assigned_to,
+              i.created_at,
+              i.updated_at,
+              i.estimated_hours,
+              i.actual_hours,
+              i.is_visible,
+              i.due_date
+          FROM issues i
+          JOIN feature f ON f.id = i.feature_id
+          JOIN sprint s ON s.id = f.sprint_id
+          WHERE i.due_date < SYSDATE
+            AND i.status != 'closed'
+            AND i.overdue_notified = 0
+      """;
+
+      return jdbc.query(sql, this::mapIssueDto);
+  }
+
+  public void markAsNotified(List<Long> issueIds) {
+      String sql = """
+          UPDATE issues
+          SET overdue_notified = 1
+          WHERE id = ? AND overdue_notified = 0
+      """;
+
+      jdbc.batchUpdate(sql, issueIds, 50, (ps, id) -> {
+          ps.setLong(1, id);
+      });
   }
 }
