@@ -109,6 +109,7 @@ CREATE TABLE issues (
     created_at TIMESTAMP DEFAULT SYSTIMESTAMP,
     updated_at TIMESTAMP,
     due_date DATE,
+    overdue_notified NUMBER(1) DEFAULT 0 NOT NULL,
 
     CONSTRAINT fk_issue_feature FOREIGN KEY (feature_id) REFERENCES feature(id),
     CONSTRAINT fk_issue_user FOREIGN KEY (assigned_to) REFERENCES users(id)
