@@ -477,6 +477,7 @@ public class IssueRepository {
   public void delete(Long issueId) {
       jdbc.update("DELETE FROM timelog WHERE issue_id = ?", issueId);
       jdbc.update("DELETE FROM issue_log WHERE issue_id = ?", issueId);
+      jdbc.update("DELETE FROM overdue_report WHERE issue_id = ?", issueId);
 
       int rows = jdbc.update("DELETE FROM issues WHERE id = ?", issueId);
 
