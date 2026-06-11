@@ -3,6 +3,7 @@ package com.example.omi.user;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,13 +61,24 @@ public class UserRepository {
 
     jdbc.update(
         sql,
-        req.getName(),
-        req.getEmail(),
-        req.getPasswordHash(),
-        req.getWorkMode(),
-        req.getRoleId(),
-        req.getManagerId(),
-        req.getStatus());
+        new Object[] {
+          req.getName(),
+          req.getEmail(),
+          req.getPasswordHash(),
+          req.getWorkMode(),
+          req.getRoleId(),
+          req.getManagerId(),
+          req.getStatus()
+        },
+        new int[] {
+          Types.VARCHAR,
+          Types.VARCHAR,
+          Types.VARCHAR,
+          Types.VARCHAR,
+          Types.NUMERIC,
+          Types.NUMERIC,
+          Types.VARCHAR
+        });
   }
 
   public void delete(Long userId) {
@@ -165,14 +177,26 @@ public class UserRepository {
 
       jdbc.update(
           sql,
-          name,
-          email,
-          passwordHash,
-          workMode,
-          roleId,
-          managerId,
-          status,
-          chatId
+          new Object[] {
+              name,
+              email,
+              passwordHash,
+              workMode,
+              roleId,
+              managerId,
+              status,
+              chatId
+          },
+          new int[] {
+              Types.VARCHAR,
+              Types.VARCHAR,
+              Types.VARCHAR,
+              Types.VARCHAR,
+              Types.NUMERIC,
+              Types.NUMERIC,
+              Types.VARCHAR,
+              Types.VARCHAR
+          }
       );
   }
 }
