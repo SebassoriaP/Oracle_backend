@@ -109,6 +109,7 @@ CREATE TABLE issues (
     created_at TIMESTAMP DEFAULT SYSTIMESTAMP,
     updated_at TIMESTAMP,
     due_date DATE,
+    overdue_notified NUMBER(1) DEFAULT 0 NOT NULL,
 
     title_embedding VECTOR(384, FLOAT32),
 
