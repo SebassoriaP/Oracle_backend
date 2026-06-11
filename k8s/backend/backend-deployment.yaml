@@ -47,6 +47,15 @@ spec:
                 secretKeyRef:
                   name: adb-credentials
                   key: FRONTEND_ORIGIN
+            - name: APP_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: adb-credentials
+                  key: APP_JWT_SECRET
+            - name: APP_JWT_EXPIRATION_MS
+              value: "86400000"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms512m -Xmx2g"
           volumeMounts:
             - name: oracle-wallet
               mountPath: /app/wallet
@@ -69,10 +78,10 @@ spec:
             failureThreshold: 3
           resources:
             requests:
-              memory: "512Mi"
+              memory: "1Gi"
               cpu: "250m"
             limits:
-              memory: "1Gi"
+              memory: "3Gi"
               cpu: "1000m"
       volumes:
         - name: oracle-wallet
