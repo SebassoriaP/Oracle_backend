@@ -15,10 +15,14 @@ public class IssueController {
 
   private final IssueRepository repo;
   private final EmbeddingService embeddingService;
+  private final IssueService issueService;
 
-  public IssueController(IssueRepository repo, EmbeddingService embeddingService) {
-    this.repo = repo;
-    this.embeddingService = embeddingService;
+  public IssueController(IssueRepository repo,
+                        EmbeddingService embeddingService,
+                        IssueService issueService) {
+      this.repo = repo;
+      this.embeddingService = embeddingService;
+      this.issueService = issueService;
   }
 
   @GetMapping("/projects/{projectId}/issues")
@@ -111,5 +115,10 @@ public class IssueController {
   @DeleteMapping("/issues/{issueId}")
   public void delete(@PathVariable Long issueId) {
     repo.delete(issueId);
+  }
+
+  @GetMapping("/issues/overdue")
+  public List<IssueDto> getOverdueIssues() {
+      return issueService.getOverdueIssues();
   }
 }

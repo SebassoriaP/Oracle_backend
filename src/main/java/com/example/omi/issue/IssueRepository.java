@@ -472,13 +472,42 @@ public class IssueRepository {
   }
 
   public void delete(Long issueId) {
-    jdbc.update("DELETE FROM timelog WHERE issue_id = ?", issueId);
-    jdbc.update("DELETE FROM issue_log WHERE issue_id = ?", issueId);
+      jdbc.update("DELETE FROM timelog WHERE issue_id = ?", issueId);
+      jdbc.update("DELETE FROM issue_log WHERE issue_id = ?", issueId);
 
-    int rows = jdbc.update("DELETE FROM issues WHERE id = ?", issueId);
+      int rows = jdbc.update("DELETE FROM issues WHERE id = ?", issueId);
 
-    if (rows == 0) {
-      throw new org.springframework.dao.EmptyResultDataAccessException(1);
+      if (rows == 0) {
+        throw new org.springframework.dao.EmptyResultDataAccessException(1);
+      }
     }
+
+    public List<IssueDto> findOverdueIssues() {
+      String sql = """
+          SELECT
+              i.id,
+              s.project_id,
+              f.sprint_id,
+              i.feature_id,
+              i.title,
+              i.description,
+              i.status,
+              i.type,
+              i.assigned_to,
+              i.created_at,
+              i.updated_at,
+              i.estimated_hours,
+              i.actual_hours,
+              i.is_visible,
+              i.due_date
+          FROM issues i
+          JOIN feature f ON f.id = i.feature_id
+          JOIN sprint s ON s.id = f.sprint_id
+          WHERE i.due_date < SYSDATE
+            AND i.status != 'closed'
+            AND i.overdue_notified = 0
+      """;
+
+      return jdbc.query(sql, this::mapIssueDto);
   }
 }
