@@ -57,7 +57,7 @@
           },
           "tags" : "Element,Component",
           "technology" : "Java and Spring Boot",
-          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/paco/docs/diagrams/auth-service.puml"
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/auth-service.puml"
         }, {
           "description" : "CRUD operations for application users.",
           "documentation" : { },
@@ -68,7 +68,7 @@
           },
           "tags" : "Element,Component",
           "technology" : "Java and Spring Boot",
-          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/paco/docs/diagrams/user-service.puml"
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/user-service.puml"
         }, {
           "description" : "Manages user roles and permissions.",
           "documentation" : { },
@@ -79,7 +79,7 @@
           },
           "tags" : "Element,Component",
           "technology" : "Java and Spring Boot",
-          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/paco/docs/diagrams/role-service.puml"
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/role-service.puml"
         }, {
           "description" : "Creates and manages projects and members.",
           "documentation" : { },
@@ -90,7 +90,7 @@
           },
           "tags" : "Element,Component",
           "technology" : "Java and Spring Boot",
-          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/paco/docs/diagrams/project-service.puml"
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/project-service.puml"
         }, {
           "description" : "Manages sprints within projects.",
           "documentation" : { },
@@ -101,7 +101,7 @@
           },
           "tags" : "Element,Component",
           "technology" : "Java and Spring Boot",
-          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/paco/docs/diagrams/sprint-service.puml"
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/sprint-service.puml"
         }, {
           "description" : "Manages features linked to projects.",
           "documentation" : { },
@@ -112,7 +112,7 @@
           },
           "tags" : "Element,Component",
           "technology" : "Java and Spring Boot",
-          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/paco/docs/diagrams/feature-service.puml"
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/feature-service.puml"
         }, {
           "description" : "CRUD issues, time logs and AI embeddings.",
           "documentation" : { },
@@ -123,7 +123,7 @@
           },
           "tags" : "Element,Component",
           "technology" : "Java and Spring Boot",
-          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/paco/docs/diagrams/issue-service.puml"
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/issue-service.puml"
         }, {
           "description" : "Aggregates hours and task metrics per user.",
           "documentation" : { },
@@ -134,7 +134,7 @@
           },
           "tags" : "Element,Component",
           "technology" : "Java and Spring Boot",
-          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/paco/docs/diagrams/kpi-service.puml"
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/kpi-service.puml"
         }, {
           "description" : "Generates and updates overdue task reports.",
           "documentation" : { },
@@ -145,7 +145,7 @@
           },
           "tags" : "Element,Component",
           "technology" : "Java and Spring Boot",
-          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/paco/docs/diagrams/overdue-service.puml"
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/overdue-service.puml"
         }, {
           "description" : "Exposes liveness and readiness endpoints.",
           "documentation" : { },
@@ -156,7 +156,7 @@
           },
           "tags" : "Element,Component",
           "technology" : "Java and Spring Boot",
-          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/paco/docs/diagrams/health-service.puml"
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/health-service.puml"
         }, {
           "description" : "CORS, OpenAPI and cross-cutting config.",
           "documentation" : { },
@@ -167,7 +167,7 @@
           },
           "tags" : "Element,Component",
           "technology" : "Java and Spring Boot",
-          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/paco/docs/diagrams/config-service.puml"
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/config-service.puml"
         } ],
         "description" : "Java 17, Spring Boot 3",
         "documentation" : { },
