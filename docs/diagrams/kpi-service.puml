@@ -1,0 +1,39 @@
+@startuml
+
+class com.example.omi.kpi.HoursByUserDto {
+	{field} -hours : java.math.BigDecimal
+	{field} -user : String
+	{field} -userId : Long
+}
+
+
+class com.example.omi.kpi.KpiController {
+}
+
+
+class com.example.omi.kpi.KpiRepository {
+	{field} -jdbc : org.springframework.jdbc.core.JdbcTemplate
+}
+
+
+class com.example.omi.kpi.KpiSummaryDto {
+	{field} -avgHoursPerDev : java.math.BigDecimal
+	{field} -avgTasksPerDev : java.math.BigDecimal
+	{field} -totalActualHours : java.math.BigDecimal
+	{field} -totalTasks : Integer
+}
+
+
+class com.example.omi.kpi.TasksByUserDto {
+	{field} -tasksCompleted : Integer
+	{field} -user : String
+	{field} -userId : Long
+}
+
+
+
+
+com.example.omi.kpi.KpiController *--  com.example.omi.kpi.KpiRepository : repo
+
+
+@enduml

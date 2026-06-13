@@ -1,0 +1,16 @@
+@startuml
+
+class com.example.omi.config.CorsConfig {
+	{field} -allowedOrigin : String
+}
+
+
+class com.example.omi.config.OpenApiConfig {
+}
+
+
+
+
+
+
+@enduml

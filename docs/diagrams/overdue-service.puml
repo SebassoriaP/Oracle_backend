@@ -1,0 +1,67 @@
+@startuml
+
+class com.example.omi.overdue.CreateOverdueReportRequest {
+	{field} +aiCategory : String
+	{field} +aiSummary : String
+	{field} +delayDays : Integer
+	{field} +description : String
+	{field} +developerName : String
+	{field} +dueDate : java.time.LocalDateTime
+	{field} +impactLevel : String
+	{field} +issueId : Long
+	{field} +reason : String
+	{field} +recommendation : String
+	{field} +severity : String
+	{field} +taskTitle : String
+}
+
+
+class com.example.omi.overdue.OverdueReportController {
+}
+
+
+class com.example.omi.overdue.OverdueReportDto {
+	{field} -aiCategory : String
+	{field} -aiSummary : String
+	{field} -delayDays : Integer
+	{field} -description : String
+	{field} -developerName : String
+	{field} -dueDate : java.time.LocalDateTime
+	{field} -id : Long
+	{field} -impactLevel : String
+	{field} -issueId : Long
+	{field} -reason : String
+	{field} -recommendation : String
+	{field} -severity : String
+	{field} -submittedAt : java.time.LocalDateTime
+	{field} -taskTitle : String
+}
+
+
+class com.example.omi.overdue.OverdueReportRepository {
+	{field} -jdbc : org.springframework.jdbc.core.JdbcTemplate
+}
+
+
+class com.example.omi.overdue.UpdateOverdueReportRequest {
+	{field} +aiCategory : String
+	{field} +aiSummary : String
+	{field} +delayDays : Integer
+	{field} +description : String
+	{field} +developerName : String
+	{field} +dueDate : java.time.LocalDateTime
+	{field} +impactLevel : String
+	{field} +issueId : Long
+	{field} +reason : String
+	{field} +recommendation : String
+	{field} +severity : String
+	{field} +taskTitle : String
+}
+
+
+
+
+com.example.omi.overdue.OverdueReportController *--  com.example.omi.overdue.OverdueReportRepository : repo
+
+
+@enduml

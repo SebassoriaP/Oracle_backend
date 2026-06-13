@@ -1,0 +1,12 @@
+@startuml
+
+class com.example.omi.health.HealthController {
+	{field} -jdbcTemplate : org.springframework.jdbc.core.JdbcTemplate
+}
+
+
+
+
+
+
+@enduml

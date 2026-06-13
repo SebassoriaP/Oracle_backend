@@ -1,0 +1,28 @@
+@startuml
+
+class com.example.omi.role.CreateRoleRequest {
+	{field} -name : String
+}
+
+
+class com.example.omi.role.RoleController {
+}
+
+
+class com.example.omi.role.RoleDto {
+	{field} -id : Long
+	{field} -name : String
+}
+
+
+class com.example.omi.role.RoleRepository {
+	{field} -jdbcTemplate : org.springframework.jdbc.core.JdbcTemplate
+}
+
+
+
+
+com.example.omi.role.RoleController *--  com.example.omi.role.RoleRepository : repo
+
+
+@enduml

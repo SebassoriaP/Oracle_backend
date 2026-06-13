@@ -1,0 +1,36 @@
+@startuml
+
+class com.example.omi.sprint.CreateSprintRequest {
+	{field} +endDate : java.time.LocalDate
+	{field} +goal : String
+	{field} +name : String
+	{field} +startDate : java.time.LocalDate
+	{field} +status : String
+}
+
+
+class com.example.omi.sprint.SprintController {
+}
+
+
+class com.example.omi.sprint.SprintDto {
+	{field} -endDate : java.time.LocalDate
+	{field} -id : Long
+	{field} -name : String
+	{field} -projectId : Long
+	{field} -startDate : java.time.LocalDate
+	{field} -status : String
+}
+
+
+class com.example.omi.sprint.SprintRepository {
+	{field} -jdbcTemplate : org.springframework.jdbc.core.JdbcTemplate
+}
+
+
+
+
+com.example.omi.sprint.SprintController *--  com.example.omi.sprint.SprintRepository : repo
+
+
+@enduml

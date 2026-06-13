@@ -1,0 +1,42 @@
+@startuml
+
+class com.example.omi.user.CreateUserRequest {
+	{field} +email : String
+	{field} +managerId : Long
+	{field} +name : String
+	{field} +passwordHash : String
+	{field} +roleId : Long
+	{field} +status : String
+	{field} +workMode : String
+}
+
+
+class com.example.omi.user.UserController {
+}
+
+
+class com.example.omi.user.UserDto {
+	{field} -chatId : String
+	{field} -createdAt : java.sql.Timestamp
+	{field} -email : String
+	{field} -id : Long
+	{field} -managerId : Long
+	{field} -name : String
+	{field} -passwordHash : String
+	{field} -roleId : Long
+	{field} -status : String
+	{field} -workMode : String
+}
+
+
+class com.example.omi.user.UserRepository {
+	{field} -jdbc : org.springframework.jdbc.core.JdbcTemplate
+}
+
+
+
+
+com.example.omi.user.UserController *--  com.example.omi.user.UserRepository : repo
+
+
+@enduml

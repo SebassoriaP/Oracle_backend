@@ -1,0 +1,35 @@
+@startuml
+
+class com.example.omi.feature.CreateFeatureRequest {
+	{field} +description : String
+	{field} +priority : String
+	{field} +status : String
+	{field} +title : String
+}
+
+
+class com.example.omi.feature.FeatureController {
+}
+
+
+class com.example.omi.feature.FeatureDto {
+	{field} -description : String
+	{field} -id : Long
+	{field} -priority : String
+	{field} -sprintId : Long
+	{field} -status : String
+	{field} -title : String
+}
+
+
+class com.example.omi.feature.FeatureRepository {
+	{field} -jdbc : org.springframework.jdbc.core.JdbcTemplate
+}
+
+
+
+
+com.example.omi.feature.FeatureController *--  com.example.omi.feature.FeatureRepository : repo
+
+
+@enduml
