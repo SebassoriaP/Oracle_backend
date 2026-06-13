@@ -1,0 +1,49 @@
+@startuml
+
+class com.example.omi.auth.AuthController {
+	{field} -passwordEncoder : org.springframework.security.crypto.password.PasswordEncoder
+	{field} -roleRepository : com.example.omi.role.RoleRepository
+	{field} -userRepository : com.example.omi.user.UserRepository
+}
+
+
+class com.example.omi.auth.AuthController$LoginRequest {
+	{field} -email : String
+	{field} -password : String
+}
+
+
+class com.example.omi.auth.JwtFilter {
+}
+
+
+class com.example.omi.auth.JwtUtil {
+	{field} -expirationMs : long
+	{field} -secret : String
+}
+
+
+class com.example.omi.auth.RegisterRequest {
+	{field} -chatId : String
+	{field} -email : String
+	{field} -managerId : Long
+	{field} -name : String
+	{field} -password : String
+	{field} -roleId : Long
+	{field} -status : String
+	{field} -workMode : String
+}
+
+
+class com.example.omi.auth.SecurityConfig {
+}
+
+
+
+
+com.example.omi.auth.AuthController *--  com.example.omi.auth.JwtUtil : jwtUtil
+com.example.omi.auth.JwtFilter *--  com.example.omi.auth.JwtUtil : jwtUtil
+com.example.omi.auth.SecurityConfig *--  com.example.omi.auth.JwtFilter : jwtFilter
+
+
+@enduml

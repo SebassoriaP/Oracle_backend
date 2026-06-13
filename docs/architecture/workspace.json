@@ -1,0 +1,369 @@
+{
+  "configuration" : { },
+  "description" : "C4 model for the OMI Smart project backend API",
+  "documentation" : { },
+  "id" : 1,
+  "lastModifiedDate" : "2026-06-13T03:21:27Z",
+  "model" : {
+    "people" : [ {
+      "description" : "Project manager or team member using the OMI application.",
+      "id" : "1",
+      "name" : "User",
+      "properties" : {
+        "structurizr.dsl.identifier" : "user"
+      },
+      "relationships" : [ {
+        "description" : "Uses",
+        "destinationId" : "3",
+        "id" : "17",
+        "sourceId" : "1",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Uses",
+        "destinationId" : "2",
+        "id" : "18",
+        "linkedRelationshipId" : "17",
+        "sourceId" : "1"
+      } ],
+      "tags" : "Element,Person"
+    } ],
+    "softwareSystems" : [ {
+      "containers" : [ {
+        "description" : "React SPA",
+        "documentation" : { },
+        "id" : "3",
+        "name" : "Web Frontend",
+        "properties" : {
+          "structurizr.dsl.identifier" : "omiSystem.frontend"
+        },
+        "relationships" : [ {
+          "description" : "API calls",
+          "destinationId" : "4",
+          "id" : "19",
+          "sourceId" : "3",
+          "tags" : "Relationship",
+          "technology" : "HTTPS/JSON"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Delivers the user interface."
+      }, {
+        "components" : [ {
+          "description" : "Handles login, registration, JWT and security filters.",
+          "documentation" : { },
+          "id" : "5",
+          "name" : "Authentication Service",
+          "properties" : {
+            "structurizr.dsl.identifier" : "omiSystem.backend.authService"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Java and Spring Boot",
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/auth-service.puml"
+        }, {
+          "description" : "CRUD operations for application users.",
+          "documentation" : { },
+          "id" : "6",
+          "name" : "User Management",
+          "properties" : {
+            "structurizr.dsl.identifier" : "omiSystem.backend.userService"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Java and Spring Boot",
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/user-service.puml"
+        }, {
+          "description" : "Manages user roles and permissions.",
+          "documentation" : { },
+          "id" : "7",
+          "name" : "Role Management",
+          "properties" : {
+            "structurizr.dsl.identifier" : "omiSystem.backend.roleService"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Java and Spring Boot",
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/role-service.puml"
+        }, {
+          "description" : "Creates and manages projects and members.",
+          "documentation" : { },
+          "id" : "8",
+          "name" : "Project Management",
+          "properties" : {
+            "structurizr.dsl.identifier" : "omiSystem.backend.projectService"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Java and Spring Boot",
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/project-service.puml"
+        }, {
+          "description" : "Manages sprints within projects.",
+          "documentation" : { },
+          "id" : "9",
+          "name" : "Sprint Management",
+          "properties" : {
+            "structurizr.dsl.identifier" : "omiSystem.backend.sprintService"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Java and Spring Boot",
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/sprint-service.puml"
+        }, {
+          "description" : "Manages features linked to projects.",
+          "documentation" : { },
+          "id" : "10",
+          "name" : "Feature Management",
+          "properties" : {
+            "structurizr.dsl.identifier" : "omiSystem.backend.featureService"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Java and Spring Boot",
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/feature-service.puml"
+        }, {
+          "description" : "CRUD issues, time logs and AI embeddings.",
+          "documentation" : { },
+          "id" : "11",
+          "name" : "Issue Management",
+          "properties" : {
+            "structurizr.dsl.identifier" : "omiSystem.backend.issueService"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Java and Spring Boot",
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/issue-service.puml"
+        }, {
+          "description" : "Aggregates hours and task metrics per user.",
+          "documentation" : { },
+          "id" : "12",
+          "name" : "KPI Service",
+          "properties" : {
+            "structurizr.dsl.identifier" : "omiSystem.backend.kpiService"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Java and Spring Boot",
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/kpi-service.puml"
+        }, {
+          "description" : "Generates and updates overdue task reports.",
+          "documentation" : { },
+          "id" : "13",
+          "name" : "Overdue Report Service",
+          "properties" : {
+            "structurizr.dsl.identifier" : "omiSystem.backend.overdueService"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Java and Spring Boot",
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/overdue-service.puml"
+        }, {
+          "description" : "Exposes liveness and readiness endpoints.",
+          "documentation" : { },
+          "id" : "14",
+          "name" : "Health Check",
+          "properties" : {
+            "structurizr.dsl.identifier" : "omiSystem.backend.healthService"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Java and Spring Boot",
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/health-service.puml"
+        }, {
+          "description" : "CORS, OpenAPI and cross-cutting config.",
+          "documentation" : { },
+          "id" : "15",
+          "name" : "API Configuration",
+          "properties" : {
+            "structurizr.dsl.identifier" : "omiSystem.backend.configService"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Java and Spring Boot",
+          "url" : "https://github.com/SebassoriaP/Oracle_backend/blob/main/docs/diagrams/config-service.puml"
+        } ],
+        "description" : "Java 17, Spring Boot 3",
+        "documentation" : { },
+        "id" : "4",
+        "name" : "Spring Boot API",
+        "properties" : {
+          "structurizr.dsl.identifier" : "omiSystem.backend"
+        },
+        "relationships" : [ {
+          "description" : "Reads from and writes to",
+          "destinationId" : "16",
+          "id" : "20",
+          "sourceId" : "4",
+          "tags" : "Relationship",
+          "technology" : "JDBC"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "REST API for projects, issues, sprints, KPIs and authentication."
+      }, {
+        "description" : "Stores users, projects, issues, sprints and KPI data.",
+        "documentation" : { },
+        "id" : "16",
+        "name" : "Oracle Autonomous DB",
+        "properties" : {
+          "structurizr.dsl.identifier" : "omiSystem.database"
+        },
+        "tags" : "Element,Container,Database",
+        "technology" : "Oracle ADB"
+      } ],
+      "description" : "Issue and project management platform with AI-assisted features.",
+      "documentation" : { },
+      "id" : "2",
+      "name" : "OMI System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "omiSystem"
+      },
+      "tags" : "Element,Software System"
+    } ]
+  },
+  "name" : "OMI Backend",
+  "properties" : {
+    "structurizr.inspection.error" : "16",
+    "structurizr.dsl" : "d29ya3NwYWNlICJPTUkgQmFja2VuZCIgIkM0IG1vZGVsIGZvciB0aGUgT01JIFNtYXJ0IHByb2plY3QgYmFja2VuZCBBUEkiIHsKCiAgICAhaWRlbnRpZmllcnMgaGllcmFyY2hpY2FsCgogICAgbW9kZWwgewogICAgICAgIHVzZXIgPSBwZXJzb24gIlVzZXIiICJQcm9qZWN0IG1hbmFnZXIgb3IgdGVhbSBtZW1iZXIgdXNpbmcgdGhlIE9NSSBhcHBsaWNhdGlvbi4iCgogICAgICAgIG9taVN5c3RlbSA9IHNvZnR3YXJlU3lzdGVtICJPTUkgU3lzdGVtIiAiSXNzdWUgYW5kIHByb2plY3QgbWFuYWdlbWVudCBwbGF0Zm9ybSB3aXRoIEFJLWFzc2lzdGVkIGZlYXR1cmVzLiIgewogICAgICAgICAgICBmcm9udGVuZCA9IGNvbnRhaW5lciAiV2ViIEZyb250ZW5kIiAiUmVhY3QgU1BBIiAiRGVsaXZlcnMgdGhlIHVzZXIgaW50ZXJmYWNlLiIKICAgICAgICAgICAgYmFja2VuZCA9IGNvbnRhaW5lciAiU3ByaW5nIEJvb3QgQVBJIiAiSmF2YSAxNywgU3ByaW5nIEJvb3QgMyIgIlJFU1QgQVBJIGZvciBwcm9qZWN0cywgaXNzdWVzLCBzcHJpbnRzLCBLUElzIGFuZCBhdXRoZW50aWNhdGlvbi4iIHsKICAgICAgICAgICAgICAgIGF1dGhTZXJ2aWNlID0gY29tcG9uZW50ICJBdXRoZW50aWNhdGlvbiBTZXJ2aWNlIiAiSGFuZGxlcyBsb2dpbiwgcmVnaXN0cmF0aW9uLCBKV1QgYW5kIHNlY3VyaXR5IGZpbHRlcnMuIiAiSmF2YSBhbmQgU3ByaW5nIEJvb3QiIHsKICAgICAgICAgICAgICAgICAgICB1cmwgImh0dHBzOi8vZ2l0aHViLmNvbS9TZWJhc3NvcmlhUC9PcmFjbGVfYmFja2VuZC9ibG9iL21haW4vZG9jcy9kaWFncmFtcy9hdXRoLXNlcnZpY2UucHVtbCIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIHVzZXJTZXJ2aWNlID0gY29tcG9uZW50ICJVc2VyIE1hbmFnZW1lbnQiICJDUlVEIG9wZXJhdGlvbnMgZm9yIGFwcGxpY2F0aW9uIHVzZXJzLiIgIkphdmEgYW5kIFNwcmluZyBCb290IiB7CiAgICAgICAgICAgICAgICAgICAgdXJsICJodHRwczovL2dpdGh1Yi5jb20vU2ViYXNzb3JpYVAvT3JhY2xlX2JhY2tlbmQvYmxvYi9tYWluL2RvY3MvZGlhZ3JhbXMvdXNlci1zZXJ2aWNlLnB1bWwiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICByb2xlU2VydmljZSA9IGNvbXBvbmVudCAiUm9sZSBNYW5hZ2VtZW50IiAiTWFuYWdlcyB1c2VyIHJvbGVzIGFuZCBwZXJtaXNzaW9ucy4iICJKYXZhIGFuZCBTcHJpbmcgQm9vdCIgewogICAgICAgICAgICAgICAgICAgIHVybCAiaHR0cHM6Ly9naXRodWIuY29tL1NlYmFzc29yaWFQL09yYWNsZV9iYWNrZW5kL2Jsb2IvbWFpbi9kb2NzL2RpYWdyYW1zL3JvbGUtc2VydmljZS5wdW1sIgogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgcHJvamVjdFNlcnZpY2UgPSBjb21wb25lbnQgIlByb2plY3QgTWFuYWdlbWVudCIgIkNyZWF0ZXMgYW5kIG1hbmFnZXMgcHJvamVjdHMgYW5kIG1lbWJlcnMuIiAiSmF2YSBhbmQgU3ByaW5nIEJvb3QiIHsKICAgICAgICAgICAgICAgICAgICB1cmwgImh0dHBzOi8vZ2l0aHViLmNvbS9TZWJhc3NvcmlhUC9PcmFjbGVfYmFja2VuZC9ibG9iL21haW4vZG9jcy9kaWFncmFtcy9wcm9qZWN0LXNlcnZpY2UucHVtbCIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIHNwcmludFNlcnZpY2UgPSBjb21wb25lbnQgIlNwcmludCBNYW5hZ2VtZW50IiAiTWFuYWdlcyBzcHJpbnRzIHdpdGhpbiBwcm9qZWN0cy4iICJKYXZhIGFuZCBTcHJpbmcgQm9vdCIgewogICAgICAgICAgICAgICAgICAgIHVybCAiaHR0cHM6Ly9naXRodWIuY29tL1NlYmFzc29yaWFQL09yYWNsZV9iYWNrZW5kL2Jsb2IvbWFpbi9kb2NzL2RpYWdyYW1zL3NwcmludC1zZXJ2aWNlLnB1bWwiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICBmZWF0dXJlU2VydmljZSA9IGNvbXBvbmVudCAiRmVhdHVyZSBNYW5hZ2VtZW50IiAiTWFuYWdlcyBmZWF0dXJlcyBsaW5rZWQgdG8gcHJvamVjdHMuIiAiSmF2YSBhbmQgU3ByaW5nIEJvb3QiIHsKICAgICAgICAgICAgICAgICAgICB1cmwgImh0dHBzOi8vZ2l0aHViLmNvbS9TZWJhc3NvcmlhUC9PcmFjbGVfYmFja2VuZC9ibG9iL21haW4vZG9jcy9kaWFncmFtcy9mZWF0dXJlLXNlcnZpY2UucHVtbCIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIGlzc3VlU2VydmljZSA9IGNvbXBvbmVudCAiSXNzdWUgTWFuYWdlbWVudCIgIkNSVUQgaXNzdWVzLCB0aW1lIGxvZ3MgYW5kIEFJIGVtYmVkZGluZ3MuIiAiSmF2YSBhbmQgU3ByaW5nIEJvb3QiIHsKICAgICAgICAgICAgICAgICAgICB1cmwgImh0dHBzOi8vZ2l0aHViLmNvbS9TZWJhc3NvcmlhUC9PcmFjbGVfYmFja2VuZC9ibG9iL21haW4vZG9jcy9kaWFncmFtcy9pc3N1ZS1zZXJ2aWNlLnB1bWwiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICBrcGlTZXJ2aWNlID0gY29tcG9uZW50ICJLUEkgU2VydmljZSIgIkFnZ3JlZ2F0ZXMgaG91cnMgYW5kIHRhc2sgbWV0cmljcyBwZXIgdXNlci4iICJKYXZhIGFuZCBTcHJpbmcgQm9vdCIgewogICAgICAgICAgICAgICAgICAgIHVybCAiaHR0cHM6Ly9naXRodWIuY29tL1NlYmFzc29yaWFQL09yYWNsZV9iYWNrZW5kL2Jsb2IvbWFpbi9kb2NzL2RpYWdyYW1zL2twaS1zZXJ2aWNlLnB1bWwiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICBvdmVyZHVlU2VydmljZSA9IGNvbXBvbmVudCAiT3ZlcmR1ZSBSZXBvcnQgU2VydmljZSIgIkdlbmVyYXRlcyBhbmQgdXBkYXRlcyBvdmVyZHVlIHRhc2sgcmVwb3J0cy4iICJKYXZhIGFuZCBTcHJpbmcgQm9vdCIgewogICAgICAgICAgICAgICAgICAgIHVybCAiaHR0cHM6Ly9naXRodWIuY29tL1NlYmFzc29yaWFQL09yYWNsZV9iYWNrZW5kL2Jsb2IvbWFpbi9kb2NzL2RpYWdyYW1zL292ZXJkdWUtc2VydmljZS5wdW1sIgogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgaGVhbHRoU2VydmljZSA9IGNvbXBvbmVudCAiSGVhbHRoIENoZWNrIiAiRXhwb3NlcyBsaXZlbmVzcyBhbmQgcmVhZGluZXNzIGVuZHBvaW50cy4iICJKYXZhIGFuZCBTcHJpbmcgQm9vdCIgewogICAgICAgICAgICAgICAgICAgIHVybCAiaHR0cHM6Ly9naXRodWIuY29tL1NlYmFzc29yaWFQL09yYWNsZV9iYWNrZW5kL2Jsb2IvbWFpbi9kb2NzL2RpYWdyYW1zL2hlYWx0aC1zZXJ2aWNlLnB1bWwiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICBjb25maWdTZXJ2aWNlID0gY29tcG9uZW50ICJBUEkgQ29uZmlndXJhdGlvbiIgIkNPUlMsIE9wZW5BUEkgYW5kIGNyb3NzLWN1dHRpbmcgY29uZmlnLiIgIkphdmEgYW5kIFNwcmluZyBCb290IiB7CiAgICAgICAgICAgICAgICAgICAgdXJsICJodHRwczovL2dpdGh1Yi5jb20vU2ViYXNzb3JpYVAvT3JhY2xlX2JhY2tlbmQvYmxvYi9tYWluL2RvY3MvZGlhZ3JhbXMvY29uZmlnLXNlcnZpY2UucHVtbCIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQoKICAgICAgICAgICAgZGF0YWJhc2UgPSBjb250YWluZXIgIk9yYWNsZSBBdXRvbm9tb3VzIERCIiAiU3RvcmVzIHVzZXJzLCBwcm9qZWN0cywgaXNzdWVzLCBzcHJpbnRzIGFuZCBLUEkgZGF0YS4iICJPcmFjbGUgQURCIiB7CiAgICAgICAgICAgICAgICB0YWdzICJEYXRhYmFzZSIKICAgICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgdXNlciAtPiBvbWlTeXN0ZW0uZnJvbnRlbmQgIlVzZXMiCiAgICAgICAgb21pU3lzdGVtLmZyb250ZW5kIC0+IG9taVN5c3RlbS5iYWNrZW5kICJBUEkgY2FsbHMiICJIVFRQUy9KU09OIgogICAgICAgIG9taVN5c3RlbS5iYWNrZW5kIC0+IG9taVN5c3RlbS5kYXRhYmFzZSAiUmVhZHMgZnJvbSBhbmQgd3JpdGVzIHRvIiAiSkRCQyIKICAgIH0KCiAgICB2aWV3cyB7CiAgICAgICAgc3lzdGVtQ29udGV4dCBvbWlTeXN0ZW0gIlN5c3RlbUNvbnRleHQiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIGNvbnRhaW5lciBvbWlTeXN0ZW0gIkNvbnRhaW5lcnMiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIGNvbXBvbmVudCBvbWlTeXN0ZW0uYmFja2VuZCAiQ29tcG9uZW50cyIgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgYXV0b2xheW91dCBscgogICAgICAgIH0KCiAgICAgICAgc3R5bGVzIHsKICAgICAgICAgICAgZWxlbWVudCAiUGVyc29uIiB7CiAgICAgICAgICAgICAgICBzaGFwZSBQZXJzb24KICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJTb2Z0d2FyZSBTeXN0ZW0iIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzExNjhiZAogICAgICAgICAgICAgICAgY29sb3IgI2ZmZmZmZgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkNvbnRhaW5lciIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjNDM4ZGQ1CiAgICAgICAgICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiQ29tcG9uZW50IiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICM4NWJiZjAKICAgICAgICAgICAgICAgIGNvbG9yICMwMDAwMDAKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJEYXRhYmFzZSIgewogICAgICAgICAgICAgICAgc2hhcGUgQ3lsaW5kZXIKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzQzOGRkNQogICAgICAgICAgICAgICAgY29sb3IgI2ZmZmZmZgogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQp9",
+    "structurizr.inspection.info" : "0",
+    "structurizr.inspection.ignore" : "0",
+    "structurizr.inspection.warning" : "0"
+  },
+  "views" : {
+    "componentViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "containerId" : "4",
+      "elements" : [ {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "10",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "11",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "12",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "13",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "14",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "15",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalContainerBoundariesVisible" : false,
+      "key" : "Components",
+      "name" : "Component View: OMI System - Spring Boot API",
+      "order" : 3
+    } ],
+    "configuration" : {
+      "styles" : {
+        "elements" : [ {
+          "background" : "#85bbf0",
+          "color" : "#000000",
+          "tag" : "Component"
+        }, {
+          "background" : "#438dd5",
+          "color" : "#ffffff",
+          "tag" : "Container"
+        }, {
+          "background" : "#438dd5",
+          "color" : "#ffffff",
+          "shape" : "Cylinder",
+          "tag" : "Database"
+        }, {
+          "shape" : "Person",
+          "tag" : "Person"
+        }, {
+          "background" : "#1168bd",
+          "color" : "#ffffff",
+          "tag" : "Software System"
+        } ]
+      },
+      "terminology" : { }
+    },
+    "containerViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "16",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalSoftwareSystemBoundariesVisible" : false,
+      "key" : "Containers",
+      "name" : "Container View: OMI System",
+      "order" : 2,
+      "relationships" : [ {
+        "id" : "17"
+      }, {
+        "id" : "19"
+      }, {
+        "id" : "20"
+      } ],
+      "softwareSystemId" : "2"
+    } ],
+    "systemContextViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "enterpriseBoundaryVisible" : true,
+      "key" : "SystemContext",
+      "name" : "System Context View: OMI System",
+      "order" : 1,
+      "relationships" : [ {
+        "id" : "18"
+      } ],
+      "softwareSystemId" : "2"
+    } ]
+  }
+}

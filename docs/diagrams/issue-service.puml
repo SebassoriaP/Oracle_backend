@@ -1,0 +1,88 @@
+@startuml
+
+class com.example.omi.EmbeddingService {
+	{field} -model : dev.langchain4j.model.embedding.EmbeddingModel
+}
+
+
+class com.example.omi.issue.CreateIssueRequest {
+	{field} +actualHours : Integer
+	{field} +assigneeId : Long
+	{field} +description : String
+	{field} +dueDate : java.time.LocalDate
+	{field} +estimatedHours : Integer
+	{field} +featureId : Long
+	{field} +isVisible : Boolean
+	{field} +status : String
+	{field} +title : String
+	{field} +type : String
+}
+
+
+class com.example.omi.issue.CreateTimeLogRequest {
+	{field} +hoursLogged : java.math.BigDecimal
+	{field} +logDate : java.time.LocalDate
+	{field} +userId : Long
+}
+
+
+class com.example.omi.issue.IssueController {
+}
+
+
+class com.example.omi.issue.IssueDto {
+	{field} -actualHours : Integer
+	{field} -assigneeId : Long
+	{field} -createdAt : java.sql.Timestamp
+	{field} -description : String
+	{field} -dueDate : java.time.LocalDate
+	{field} -estimatedHours : Integer
+	{field} -featureId : Long
+	{field} -id : Long
+	{field} -isVisible : Boolean
+	{field} -projectId : Long
+	{field} -sprintId : Long
+	{field} -status : String
+	{field} -title : String
+	{field} -type : String
+	{field} -updatedAt : java.sql.Timestamp
+}
+
+
+class com.example.omi.issue.IssueRepository {
+	{field} -jdbc : org.springframework.jdbc.core.JdbcTemplate
+}
+
+
+class com.example.omi.issue.PatchIssueRequest {
+	{field} +actualHours : Integer
+	{field} +assigneeId : Long
+	{field} +description : String
+	{field} +estimatedHours : Integer
+	{field} +featureId : Long
+	{field} +isVisible : Boolean
+	{field} +status : String
+	{field} +title : String
+	{field} +type : String
+}
+
+
+class com.example.omi.issue.TimeLogDto {
+	{field} -hoursLogged : java.math.BigDecimal
+	{field} -id : Long
+	{field} -issueId : Long
+	{field} -logDate : java.time.LocalDate
+	{field} -projectId : Long
+	{field} -sprintId : Long
+	{field} -userId : Long
+	{field} -userName : String
+}
+
+
+
+
+com.example.omi.issue.IssueController *--  com.example.omi.EmbeddingService : embeddingService
+com.example.omi.issue.IssueController *--  com.example.omi.issue.IssueRepository : repo
+
+
+@enduml

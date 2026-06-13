@@ -1,0 +1,37 @@
+@startuml
+
+class com.example.omi.project.CreateProjectMemberRequest {
+	{field} +role : String
+	{field} +userId : Long
+}
+
+
+class com.example.omi.project.CreateProjectRequest {
+	{field} -description : String
+	{field} -name : String
+	{field} -status : String
+}
+
+
+class com.example.omi.project.ProjectController {
+}
+
+
+class com.example.omi.project.ProjectMemberDto {
+	{field} -name : String
+	{field} -role : String
+	{field} -userId : Long
+}
+
+
+class com.example.omi.project.ProjectRepository {
+	{field} -jdbcTemplate : org.springframework.jdbc.core.JdbcTemplate
+}
+
+
+
+
+com.example.omi.project.ProjectController *--  com.example.omi.project.ProjectRepository : repo
+
+
+@enduml
